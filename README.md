@@ -19,7 +19,7 @@ Analyzing YouTube trending videos requires a structured pipeline that ensures:
 
 ---
 
-## 🎯 **Project Architecture**
+## 🏗️ **Project Architecture**
 
 📌 **Data Flow Overview:**
 1. **Data Collection:** YouTube trending videos data is fetched and stored in S3.
@@ -40,7 +40,7 @@ Analyzing YouTube trending videos requires a structured pipeline that ensures:
 | **Data Formats** | JSON, Parquet |
 
 ---
-## 🔥 **Power BI Dashboard Overview**
+## 📊 **Power BI Dashboard Overview**
 
 ### 📌 **Key Features**
 
