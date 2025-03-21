@@ -4,6 +4,21 @@
 
 ---
 
+## 🎯 Problem Statement
+
+Analyzing YouTube trending videos requires a structured pipeline that ensures:
+- **Data Integrity** – Cleaning raw JSON data and ensuring schema consistency.
+- **Scalability** – Efficient processing of large datasets using AWS services.
+- **Actionable Insights** – Enabling dynamic data exploration through Power BI.
+
+### **Objectives**
+✅ Ingest & clean raw YouTube trending data.  
+✅ Process and transform data using AWS Glue and Lambda.  
+✅ Generate key performance metrics with Power BI DAX.  
+✅ Visualize trends such as top channels and user engagement over time.  
+
+---
+
 ## 🎯 **Project Architecture**
 
 📌 **Data Flow Overview:**
@@ -15,7 +30,16 @@
 ![Architecture Diagram](ADD_YOUR_DIAGRAM_LINK_HERE)
 
 ---
+## 🚀 Tech Stack
 
+| Category         | Tools & Technologies |
+|-----------------|---------------------|
+| **Cloud Services** | AWS S3, AWS Lambda, AWS Glue |
+| **Processing** | Python, Pandas, AWS Wrangler |
+| **Visualization** | Power BI, DAX |
+| **Data Formats** | JSON, Parquet |
+
+---
 ## 🔥 **Power BI Dashboard Overview**
 
 ### 📌 **Key Features**
