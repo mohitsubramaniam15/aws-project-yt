@@ -27,7 +27,6 @@ Analyzing YouTube trending videos requires a structured pipeline that ensures:
 3. **Data Storage:** Cleansed and structured data is stored in S3 using Parquet format.
 4. **Data Visualization:** Power BI extracts insights from processed data.
 
-![Architecture Diagram](ADD_YOUR_DIAGRAM_LINK_HERE)
 
 ---
 ## 🚀 Tech Stack
