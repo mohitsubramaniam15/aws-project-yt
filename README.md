@@ -20,6 +20,21 @@ Analyzing YouTube trending videos requires a structured pipeline that ensures:
 ---
 
 ## 🏗️ **Project Architecture**
+```mermaid
+graph TD;
+  SourceSystems -->|Bulk Load| S3Landing
+  S3Landing -->|Clean & Enrich| S3Cleansed
+  S3Cleansed -->|Deduplicate| S3Deduped
+  S3Deduped -->|Conform Data| S3Conformed
+  S3Conformed -->|Query| Athena
+  Athena -->|Access via API| Redshift
+  Redshift -->|Visualize| PowerBI
+  S3Landing -->|Process| Glue
+  Glue -->|Orchestrate| StepFunctions
+  Glue -->|Trigger Functions| Lambda
+  Glue -->|Catalog Metadata| GlueCatalog
+  Cloudwatch -->|Monitor| All
+```
 
 📌 **Data Flow Overview:**
 1. **Data Collection:** YouTube trending videos data is fetched and stored in S3.
