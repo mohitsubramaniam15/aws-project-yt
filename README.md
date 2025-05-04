@@ -3,6 +3,11 @@
 🚀 This project integrates an **AWS-based data pipeline** with an **interactive Power BI dashboard** to analyze YouTube video trends. It leverages **AWS S3, AWS Lambda, AWS Glue, and Power BI** to process and visualize key performance metrics like **views, likes, dislikes, and comments** across various channels.
 
 ---
+## 📸 Power BI Dashboard Screenshot
+
+![Streaming Power BI Dashboard](https://github.com/mohitsubramaniam15/mohitsubramaniam15/blob/main/bi_screenshots/Aws-yt-vis.png)
+
+---
 
 ## 🎯 Problem Statement
 
