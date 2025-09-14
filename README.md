@@ -1,30 +1,148 @@
-# 💡 **YouTube Analytics Data Pipeline & Power BI Dashboard** 🎥📊
+# 🎥💡 YouTube Analytics Data Pipeline & Regional Correlation Dashboard
 
-🚀 This project integrates an **AWS-based data pipeline** with an **interactive Power BI dashboard** to analyze YouTube video trends. It leverages **AWS S3, AWS Lambda, AWS Glue, and Power BI** to process and visualize key performance metrics like **views, likes, dislikes, and comments** across various channels.
+🚀 This project integrates an **AWS-based data pipeline** with **Python analysis** and an **interactive Power BI dashboard** to study **YouTube audience engagement** across **11 regions** and **600+ channels**.  
+
+It combines **cloud engineering (AWS S3, Glue, Lambda, Athena)**, **data analysis (Python, Pandas, Seaborn, Matplotlib)**, and **BI storytelling (Power BI)** to uncover:  
+- **Correlations** between views, likes, dislikes, and comments.  
+- **Regional audience behavior** across 600+ channels.  
+- **Channel-level dominance & volatility** in engagement.  
+
+
+📌 [LinkedIn slides](https://www.linkedin.com/feed/update/urn:li:activity:7372924595622035456/)
 
 ---
-## 📸 Power BI Dashboard Screenshot
 
-![Streaming Power BI Dashboard](https://github.com/mohitsubramaniam15/mohitsubramaniam15/blob/main/bi_screenshots/Aws-yt-vis.png)
+## 📌 Navigation  
+<div align="center">  
+
+| Section | Link |  
+|---------|------|  
+| **Part 1 – Data Analysis** | [Go to Data Analysis](#-part-1-data-analysis--correlation--regional-insights) |  
+| **Notebook Breakdown** | [Go to Notebook Breakdown](#-notebook-breakdown-eda_youtubeipynb) |  
+| **Interactive Dashboard** | [View Dashboard](#-power-bi-dashboard) |  
+| **Part 2 – Data Engineering** | [Go to Data Engineering](#-part-2-data-engineering--aws-pipeline--glue-etl) |  
+</div>  
 
 ---
 
-## 🎯 Problem Statement
+## 🎯 Problem Statement & Objectives  
 
-Analyzing YouTube trending videos requires a structured pipeline that ensures:
-- **Data Integrity** – Cleaning raw JSON data and ensuring schema consistency.
-- **Scalability** – Efficient processing of large datasets using AWS services.
-- **Actionable Insights** – Enabling dynamic data exploration through Power BI.
+Analyzing **trending YouTube videos** requires more than raw counts. The data is **fragmented across 11 regions**, messy, and schema-inconsistent. To generate real insights, we need both:  
+- A **scalable AWS pipeline** to clean and prepare data.  
+- A **robust analysis framework** to study correlations, volatility, and cultural differences.  
 
-### **Objectives**
+### Objectives  
 ✅ Ingest & clean raw YouTube trending data.  
-✅ Process and transform data using AWS Glue and Lambda.  
-✅ Generate key performance metrics with Power BI DAX.  
-✅ Visualize trends such as top channels and user engagement over time.  
+✅ Process and transform 22 files (176 parameters) using AWS Glue and Lambda.  
+✅ Perform correlation & regional analysis on 600+ channels (102B views, 3B likes, 283M comments, 119M dislikes).  
+✅ Build an interactive Power BI dashboard for engagement insights.  
 
 ---
 
-## 🏗️ **Project Architecture**
+## 🔹 Part 1: Data Analysis – Correlation & Regional Insights  
+
+### 🎯 Why Analyze YouTube Data?  
+YouTube is not just about views — audience engagement is multi-dimensional: people **watch**, **like**, **dislike**, and **comment** on content differently across cultures. Studying these metrics together tells us:  
+- Which behaviors **predict success** (e.g., do likes always follow views?).  
+- How audiences **differ by region** (active participation vs passive watching).  
+- Where **volatility** comes from (polarizing creators, viral spikes).  
+
+This analysis covers **600+ YouTube channels across 11 regions**, focusing on **relationships between engagement metrics** and **regional differences**.  
+
+---
+
+### 📊 Dataset & Scope  
+- **22 files (CSV/JSON)** processed with AWS Glue  
+- **176 parameters** harmonized  
+- **600+ YouTube channels analyzed**  
+- **102B views, 3B likes, 283M comments, 119M dislikes** studied  
+
+---
+
+### 🧪 Notebook Breakdown (EDA_Youtube.ipynb)  
+📂 [Open in Google Colab](https://colab.research.google.com/drive/14S8sAlns6IKeyAQpyRVNt_Svsk4F3SSj?usp=sharing)  
+
+---
+
+### Analysis Steps  
+
+#### 1. Data Cleaning  
+```python
+import pandas as pd
+
+df = pd.read_csv("USvideos.csv")
+df = df.drop_duplicates()
+df['comment_count'] = df['comment_count'].fillna(0)
+```
+👉 Unified dataset across 11 regions.  
+
+#### 2. Engagement Metric Exploration  
+```python
+df[['views','likes','dislikes','comment_count']].describe()
+```
+- Views skewed → viral spikes dominate.  
+- Likes scale with views.  
+- Comments sparse; dislikes weak.  
+
+#### 3. Correlation Analysis  
+```python
+import seaborn as sns, matplotlib.pyplot as plt
+corr = df[['views','likes','dislikes','comment_count']].corr()
+sns.heatmap(corr, annot=True, cmap="coolwarm")
+```
+- Views ↔ Likes = strongest.  
+- Comments = cultural.  
+- Dislikes = weakest.  
+
+#### 4. Variance & Trend Modeling  
+```python
+df.groupby('channel_title')[['views','likes']].var().sort_values(by='views', ascending=False).head(5)
+```
+- High variance = polarized/viral creators.  
+
+#### 5. Regional Segmentation  
+```python
+df.groupby('region')[['views','likes','dislikes','comment_count']].mean()
+```
+- Americas → comment-heavy.  
+- Europe → more dislikes.  
+- Asia → massive views, lower engagement ratios.  
+
+#### 6. Channel-Level Insights  
+```python
+df.groupby('channel_title')['views'].sum().sort_values(ascending=False).head(5)
+```
+- Top: SpaceX, PewDiePie, Vevo, xxxtentacion.  
+
+---
+
+### 📈 Key Insights  
+- Likes = strongest predictor of success.  
+- Comments = region-driven (culture matters).  
+- Dislikes = weak signal globally.  
+- Volatility reveals polarized creators.  
+- Audience reactions differ by region.  
+
+---
+
+### 📸 Power BI Dashboard  
+![Power BI Dashboard](https://github.com/mohitsubramaniam15/mohitsubramaniam15/blob/main/bi_screenshots/Aws-yt-vis.png)  
+![Power BI Dashboard](https://github.com/mohitsubramaniam15/mohitsubramaniam15/blob/main/bi_screenshots/ytpg2.png)  
+Features: KPIs, filters, correlation matrices, regional breakdowns, top channels.  
+
+---
+
+## 🔹 Part 2: Data Engineering – AWS Pipeline & Glue ETL  
+
+### 🎯 Problem Statement  
+Raw data was fragmented, schema-inconsistent, and regionalized. The AWS pipeline solved for:  
+- **Data integrity** (clean, deduplicated).  
+- **Scalability** (22 files, 176 params, 11 regions).  
+- **BI-ready outputs** for Power BI.  
+
+---
+
+### 🏗️ Architecture  
 ```mermaid
 graph TD;
   SourceSystems -->|Bulk Load| S3Landing
@@ -32,202 +150,90 @@ graph TD;
   S3Cleansed -->|Deduplicate| S3Deduped
   S3Deduped -->|Conform Data| S3Conformed
   S3Conformed -->|Query| Athena
-  Athena -->|Access via API| Redshift
-  Redshift -->|Visualize| PowerBI
+  Athena -->|Visualize| PowerBI
   S3Landing -->|Process| Glue
-  Glue -->|Orchestrate| StepFunctions
   Glue -->|Trigger Functions| Lambda
   Glue -->|Catalog Metadata| GlueCatalog
   Cloudwatch -->|Monitor| All
 ```
 
-📌 **Data Flow Overview:**
-1. **Data Collection:** YouTube trending videos data is fetched and stored in S3.
-2. **Data Processing:** AWS Lambda and AWS Glue transform raw JSON data.
-3. **Data Storage:** Cleansed and structured data is stored in S3 using Parquet format.
-4. **Data Visualization:** Power BI extracts insights from processed data.
-
-
----
-## 🚀 Tech Stack
-
-| Category         | Tools & Technologies |
-|-----------------|---------------------|
-| **Cloud Services** | AWS S3, AWS Lambda, AWS Glue |
-| **Processing** | Python, Pandas, AWS Wrangler |
-| **Visualization** | Power BI, DAX |
-| **Data Formats** | JSON, Parquet |
-
----
-## 📊 **Power BI Dashboard Overview**
-
-### 📌 **Key Features**
-
-#### 🔥 **Main KPI Cards (Top Section)**
-📌 **Total Views:** `102bn`  
-📌 **Total Likes:** `3bn`  
-📌 **Total Dislikes:** `119M`  
-📌 **Total Comments:** `283M`  
-✅ Provides a **quick snapshot** of audience engagement.
-
-#### 🎛️ **Filters & Navigation (Left Panel)**
-✔ **Trending Date Filter**  
-✔ **Channel Title Filter**  
-✔ **Comments Disabled Filter**  
-✔ **Video Error/NA Filter**  
-✔ **Table View Button** to access detailed video data.
-
-#### 📈 **Time Series Analysis (Top Right Section)**
-📊 **Dislikes, Likes & Comments by Trending Date**  
-📌 Tracks user interactions over time.
-
-#### 🏆 **Channel Performance Analysis (Bottom Section)**
-📊 **Views & Engagement by Channel Title**  
-📌 **Top Engaged Channels:** `PewDiePie, SpaceX, CaseyNeistat`
-
-#### 📜 **Tabular Data View (Bottom Left)**
-🔎 Displays video-specific insights like **thumbnail, title, publish time, and availability**.
-
 ---
 
-## ☁️ **AWS Data Pipeline for YouTube Analytics**
-
-### 📂 **Data Loading (data_loading.sh)**
-This script uploads raw YouTube statistics data to an **Amazon S3 bucket** using Hive-style partitioning.
-
+### 📂 Data Loading (Shell)  
 ```bash
-aws s3 cp . s3://de-on-youtube-raw-useast1-dev-mohit/youtube/raw_statistics_reference_data/ --recursive --exclude "*" --include "*.json"
-# Copy data files by region
-aws s3 cp CAvideos.csv s3://de-on-youtube-raw-useast1-dev-mohit/youtube/raw_statistics/region=ca/
-aws s3 cp DEvideos.csv s3://de-on-youtube-raw-useast1-dev-mohit/youtube/raw_statistics/region=de/
-aws s3 cp FRvideos.csv s3://de-on-youtube-raw-useast1-dev-mohit/youtube/raw_statistics/region=fr/
-aws s3 cp GBvideos.csv s3://de-on-youtube-raw-useast1-dev-mohit/youtube/raw_statistics/region=gb/
-aws s3 cp INvideos.csv s3://de-on-youtube-raw-useast1-dev-mohit/youtube/raw_statistics/region=in/
-aws s3 cp JPvideos.csv s3://de-on-youtube-raw-useast1-dev-mohit/youtube/raw_statistics/region=jp/
-aws s3 cp KRvideos.csv s3://de-on-youtube-raw-useast1-dev-mohit/youtube/raw_statistics/region=kr/
-aws s3 cp MXvideos.csv s3://de-on-youtube-raw-useast1-dev-mohit/youtube/raw_statistics/region=mx/
-aws s3 cp RUvideos.csv s3://de-on-youtube-raw-useast1-dev-mohit/youtube/raw_statistics/region=ru/
-aws s3 cp USvideos.csv s3://de-on-youtube-raw-useast1-dev-mohit/youtube/raw_statistics/region=us/
+aws s3 cp USvideos.csv s3://de-on-youtube-raw/youtube/raw_statistics/region=us/
+aws s3 cp INvideos.csv s3://de-on-youtube-raw/youtube/raw_statistics/region=in/
 ```
 
 ---
 
-### 🖥️ **AWS Lambda Function (lambdaFunction.py)**
-Processes YouTube JSON data from S3 and normalizes it into a structured format for storage in AWS Glue Catalog.
-
+### 🖥️ AWS Lambda Function  
 ```python
-import awswrangler as wr
-import pandas as pd
-import urllib.parse
-import os
+import awswrangler as wr, pandas as pd
 
 def lambda_handler(event, context):
     bucket = event['Records'][0]['s3']['bucket']['name']
-    key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
-    try:
-        df_raw = wr.s3.read_json(f's3://{bucket}/{key}')
-        df_step_1 = pd.json_normalize(df_raw['items'])
-        wr_response = wr.s3.to_parquet(
-            df=df_step_1,
-            path=os.environ['s3_cleansed_layer'],
-            dataset=True,
-            database=os.environ['glue_catalog_db_name'],
-            table=os.environ['glue_catalog_table_name'],
-            mode=os.environ['write_data_operation']
-        )
-        return wr_response
-    except Exception as e:
-        print(f'Error processing object {key} from bucket {bucket}: {e}')
-        raise
+    key = event['Records'][0]['s3']['object']['key']
+    
+    df_raw = wr.s3.read_json(f's3://{bucket}/{key}')
+    df_flat = pd.json_normalize(df_raw['items'])
+    
+    wr.s3.to_parquet(
+        df=df_flat,
+        path="s3://de-on-youtube-cleansed/youtube/",
+        dataset=True,
+        mode="append"
+    )
 ```
 
 ---
-### ⚡ **AWS Glue Job for ETL (pyspark_glue.py)**
-Extracts, transforms, and loads raw YouTube data into Parquet format for analytical queries.
 
+### ⚡ AWS Glue ETL (PySpark)  
 ```python
-import sys
-from awsglue.transforms import *
-from awsglue.utils import getResolvedOptions
-from pyspark.context import SparkContext
-from awsglue.context import GlueContext
-from awsglue.job import Job
-from awsglue.dynamicframe import DynamicFrame
-
-args = getResolvedOptions(sys.argv, ['JOB_NAME'])
-
-sc = SparkContext()
-glueContext = GlueContext(sc)
-spark = glueContext.spark_session
-job = Job(glueContext)
-job.init(args['JOB_NAME'], args)
-
-predicate_pushdown = "region in ('ca','gb','us')"
-
-datasource0 = glueContext.create_dynamic_frame.from_catalog(
-    database="db_youtube_raw", 
-    table_name="raw_statistics", 
-    transformation_ctx="datasource0", 
-    push_down_predicate=predicate_pushdown
+datasource = glueContext.create_dynamic_frame.from_catalog(
+    database="db_youtube_raw",
+    table_name="raw_statistics"
 )
 
-applymapping1 = ApplyMapping.apply(
-    frame=datasource0, 
+applymapping = ApplyMapping.apply(
+    frame=datasource,
     mappings=[
-        ("video_id", "string", "video_id", "string"),
-        ("trending_date", "string", "trending_date", "string"),
-        ("title", "string", "title", "string"),
-        ("channel_title", "string", "channel_title", "string"),
-        ("category_id", "long", "category_id", "long"),
-        ("publish_time", "string", "publish_time", "string"),
-        ("tags", "string", "tags", "string"),
-        ("views", "long", "views", "long"),
-        ("likes", "long", "likes", "long"),
-        ("dislikes", "long", "dislikes", "long"),
-        ("comment_count", "long", "comment_count", "long"),
-        ("thumbnail_link", "string", "thumbnail_link", "string"),
-        ("comments_disabled", "boolean", "comments_disabled", "boolean"),
-        ("ratings_disabled", "boolean", "ratings_disabled", "boolean"),
-        ("video_error_or_removed", "boolean", "video_error_or_removed", "boolean"),
-        ("description", "string", "description", "string"),
-        ("region", "string", "region", "string")
-    ],
-    transformation_ctx="applymapping1"
+        ("video_id","string","video_id","string"),
+        ("views","long","views","long"),
+        ("likes","long","likes","long"),
+        ("dislikes","long","dislikes","long"),
+        ("comment_count","long","comment_count","long"),
+        ("region","string","region","string")
+    ]
 )
 
-resolvechoice2 = ResolveChoice.apply(
-    frame=applymapping1, 
-    choice="make_struct", 
-    transformation_ctx="resolvechoice2"
+glueContext.write_dynamic_frame.from_options(
+    frame=applymapping,
+    connection_type="s3",
+    connection_options={"path":"s3://de-on-youtube-cleansed/","partitionKeys":["region"]},
+    format="parquet"
 )
-
-dropnullfields3 = DropNullFields.apply(
-    frame=resolvechoice2, 
-    transformation_ctx="dropnullfields3"
-)
-
-datasink1 = dropnullfields3.toDF().coalesce(1)
-df_final_output = DynamicFrame.fromDF(datasink1, glueContext, "df_final_output")
-
-datasink4 = glueContext.write_dynamic_frame.from_options(
-    frame=df_final_output, 
-    connection_type="s3", 
-    connection_options={"path": "s3://de-on-youtube-cleansed-useast1-dev/youtube/raw_statistics/", "partitionKeys": ["region"]}, 
-    format="parquet", 
-    transformation_ctx="datasink4"
-)
-
-job.commit()
 ```
 
 ---
 
-## 🚀 How to Deploy
+### 🖋️ Athena Query Example  
+```sql
+SELECT region, channel_title, SUM(views) AS total_views
+FROM youtube_statistics
+WHERE trending_date BETWEEN '2017-01-01' AND '2017-12-31'
+GROUP BY region, channel_title
+ORDER BY total_views DESC
+LIMIT 10;
+```
 
-1. **Set Up AWS Resources:** Create an S3 bucket and AWS Glue catalog.
-2. **Upload Data:** Run `data_loading.sh` to store raw data in S3.
-3. **Deploy Lambda:** Configure and deploy the AWS Lambda function.
-4. **Run AWS Glue Job:** Execute `pyspark_glue.py` to transform data.
-5. **Load into Power BI:** Connect Power BI to the processed dataset and build dashboards.
+---
 
-📌 **This project enables scalable data processing for YouTube analytics with AWS, ensuring efficient data storage, transformation, and visualization!** 🚀☁️
+## ✅ Outcome  
+- Delivered **end-to-end AWS pipeline** (S3 → Lambda → Glue → Athena → Power BI).  
+- Analyzed **600+ channels** across 11 regions with **102B+ views**.  
+- Built **interactive dashboards** highlighting correlations & cultural differences.  
+- Combined **cloud engineering + advanced analytics + BI storytelling**.  
+
+
+🚀 A **cloud-scale, full-stack data project** — transforming raw YouTube data into **regional engagement insights**.  
